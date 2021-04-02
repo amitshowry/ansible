@@ -1,0 +1,27 @@
+user: amitshowry
+
+#list
+usernames_list:
+- amit
+- showry
+
+#dictionary 
+user_details: 
+  name: amit
+  job: engineer
+  salary: 100000
+
+# mutiple lines with new line  
+include_newlines: |
+  firstname
+  lastname
+  salary
+
+# mutiple lines without new line  
+fold_newlines: >
+  house number,
+  area,
+  city,
+  county,
+  pin,
+  country

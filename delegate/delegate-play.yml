@@ -1,0 +1,20 @@
+---
+- hosts: remote
+  tasks:
+    - name: copy sleep.sh
+      copy:
+        src: sleep.sh
+        dest: /tmp/sleep.sh
+      delegate_to: 127.0.0.1
+
+    - name: Install mariadb
+      package:
+        name: mariadb
+        state: latest
+      become: yes 
+
+    - name: run sleep.sh 
+      command: bash /tmp/sleep.sh 
+      async: 60
+      poll: 0
+      delegate_to: 127.0.0.1

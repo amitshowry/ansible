@@ -1,0 +1,7 @@
+---
+# handlers file for /jaga/ansible/roles/web
+- name: httpd service restart handler
+  service:
+    name: httpd
+    state: restarted
+  listen: httpd service handler

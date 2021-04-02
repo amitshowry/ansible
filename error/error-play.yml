@@ -1,0 +1,20 @@
+---
+- hosts: remote
+  become: yes
+  tasks:
+    - name: Install a package
+      yum:
+        name: abcd
+        state: latest
+      ignore_errors: yes
+    - name: copy scripit.sh
+      copy:
+        src: script.sh
+        dest: /tmp/script.sh
+    - name: Run a script
+      command:  bash /tmp/script.sh
+      # failed_when 'return message from have 'FAILED' word' 
+      # command:  bash /tmp/script.sh arg1
+      register: cmd_output
+      changed_when: "'CHANGED' in cmd_output.stdout"
+      failed_when: "'FAILED' in cmd_output.stdout"

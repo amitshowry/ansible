@@ -1,0 +1,12 @@
+---
+- hosts: remote
+  gather_facts: no
+  vars:
+    user: amit
+    version: 1.0
+  tasks:
+    - name: deploy template file
+      template:
+        src: template.j2 
+        dest: /tmp/user.version
+

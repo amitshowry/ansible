@@ -1,0 +1,20 @@
+---
+- hosts: remote
+  become: yes
+  vars:
+    target_service: nginx
+    # installed httpd software already for sample
+    # target_service: httpd 
+  tasks:
+    - name: start "{{ target_service }}" service
+      block: 
+        - service: 
+            name: "{{ target_service }}"
+            state: started
+          register: service_status
+      rescue:
+        - debug:
+            var: service_status
+      always:
+        - debug:
+            msg: "Tried to ensure service start always"

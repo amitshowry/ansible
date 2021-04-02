@@ -1,0 +1,22 @@
+---
+- hosts: remote
+  become: yes
+  vars: 
+    httpd_log_level: error
+  tasks:
+    - name: install httpd
+      yum:
+        name: httpd
+        state: latest 
+    - name: update httpd config
+      template:
+        src: httpd.conf.j2
+        dest: /etc/httpd/conf/httpd.conf
+      notify: httpd service handler
+  handlers:
+    - name: httpd service restart handler
+      service:
+        name: httpd
+        state: restarted
+      listen: httpd service handler  
+

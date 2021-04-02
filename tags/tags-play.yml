@@ -1,0 +1,24 @@
+---
+- hosts: remote
+  tasks:
+    - name: Install elinks
+      become: yes
+      yum: 
+        name: elinks
+        state: latest
+      tags:
+        - software
+    - name: file with config line
+      lineinfile:
+        path: /tmp/tagfile.txt
+        create: yes
+        line: "Tag called"
+      tags:
+        - files
+        - config
+    - name: config tag file
+      copy:
+        src: tags-copy.txt
+        dest: /tmp/tags-copied.txt
+      tags:
+        - config

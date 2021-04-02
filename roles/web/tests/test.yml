@@ -1,0 +1,12 @@
+---
+- hosts: remote
+  become: yes
+#  roles:
+#    - /jaga/ansible/roles/web
+  tasks:
+    - name: I ran
+      debug:
+        msg: "I ran!"
+    - name: use role
+      include_role:
+        name: /jaga/ansible/roles/web

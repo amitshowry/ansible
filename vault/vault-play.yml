@@ -1,0 +1,11 @@
+---
+- hosts: remote
+  vars_files:
+    - vault
+  tasks:
+    - name: copt vault secret content into plain text file
+      lineinfile:
+        path: /tmp/vault-plaintext
+        create:  yes
+        line: "{{ password }}"
+      no_log: true

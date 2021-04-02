@@ -1,0 +1,19 @@
+---
+- hosts: remote
+  tasks:
+    - name: create file based in ansible facts
+      lineinfile:
+        path: /tmp/hostnames
+        create: yes
+        line: "{{ ansible_hostname }}" 
+    - name: create file based on magic variables 
+      lineinfile:
+        path: /tmp/hostnames-magic
+        create: yes
+        line: "{{ hostvars['localhost']['ansible_default_ipv4']['address'] }}"
+
+#    - name: create file based on magic variables 
+#      lineinfile:
+#        path: /tmp/groupnames-magic
+#        create: yes
+#        line: "{{ groups }} - {{ group_name }} - {{ inventory_hostname }}"

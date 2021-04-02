@@ -1,0 +1,24 @@
+---
+- hosts: remote
+  tasks:
+    - name: copy sleep.sh file
+      copy:
+        src: sleep.sh
+        dest: /tmp/sleep.sh
+    - name: execute script in sync mode
+      command: bash /tmp/sleep.sh 
+      # aync allows 60 sec to run sleep.sh script which runs for 30 sec  with polling check made every 10 sec
+      async: 60
+      poll: 10
+      
+      # aync allows 20 sec to run sleep.sh script which runs for 30 sec  with polling check made every 5 sec
+      #async: 20
+      #poll: 5
+       
+      # aync allow sleep.sh script to excute which runs for 30 sec while polling disabled further task continue doesn't wait
+      #async: 120
+      #poll: 0
+    - name: copy sleep.sh script in /var/tmp
+      copy:
+        src: sleep.sh
+        dest: /var/tmp/sleep.sh

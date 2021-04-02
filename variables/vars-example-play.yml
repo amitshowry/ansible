@@ -1,0 +1,29 @@
+---
+- hosts: remote
+  vars:
+    user_home : showry
+  tasks:
+    - name: "create {{ user_home }} directory"
+      file:
+        name: "/tmp/{{ user_home }}"
+        state: directory
+    - name : create usernames_list file
+      lineinfile:
+        path: "/tmp/{{ user_home }}/usernames_list.txt"
+        create: yes
+        line: "{{ usernames_list }}"
+    - name : create user_details file
+      lineinfile:
+        path: "/tmp/{{ user_home }}/user_details.txt"
+        create: yes
+        line: "{{ user_details['name'] }} is earning {{ user_details['salary'] }} as a {{ user_details['job'] }}"
+    - name : create file with include_newlines
+      lineinfile:
+        path: "/tmp/{{ user_home }}/include_newlines.txt"
+        create: yes
+        line: "{{ include_newlines }}"
+    - name : create users with fold_newlines
+      lineinfile:
+        path: "/tmp/{{ user_home }}/fold_newlines.txt"
+        create: yes
+        line: "{{ fold_newlines }}"

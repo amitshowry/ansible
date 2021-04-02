@@ -1,0 +1,20 @@
+---
+- hosts: remote
+  become: yes
+  vars_files:
+    - vars-types.yml
+  tasks:
+    - name: install softwares
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - elinks
+        - vim
+        - git
+    - name: remove users from usernames_list variable from vars-types.yml
+      user:
+        name: "{{ item }}"
+        state: absent
+        remove: yes
+      loop: "{{ usernames_list }}"
