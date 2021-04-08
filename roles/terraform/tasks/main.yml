@@ -1,0 +1,13 @@
+---
+# Setup/install tasks.
+- name: Set up Ansible on RedHat.
+  include_tasks: setup-RedHat.yml
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution != 'Fedora'
+
+- name: Set up Ansible on Ubuntu.
+  include_tasks: setup-Ubuntu.yml
+  when:
+    - ansible_distribution == 'Ubuntu'
+

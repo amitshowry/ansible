@@ -1,0 +1,24 @@
+---
+- name: Add Hasicorp GPG Key
+  ansible.builtin.apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+
+- name: run lsb_release -cs command to get short codename of release
+  shell: lsb_release -cs
+  register: lsb_release
+
+- name: Add Hasicorp repository 
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] https://apt.releases.hashicorp.com "{{lsb_release.stdout}}" main
+    state: present
+    filename: hasicorp-terraform
+
+- name: Run apt-get update
+  apt:
+    update_cache: yes
+
+- name: Install hasicorp terraform
+  package:
+    name: terraform
+    state: present
