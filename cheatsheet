@@ -171,6 +171,8 @@ Ansible Roles
 
  # ansible-galaxy install geerlingguy.apache | <galaxy username>.<rolename> - /home/<user>/.ansible/roles/geerlingguy.apache
 
+ # ansible-galaxy init role-name
+
  defaults    | declare any default variables unless overide by vars or playbook ( entrypoint main.yml ) 
  files       | files will be used in role  
  handlers    | all handlers  only ( entrypoint main.yml )
@@ -181,4 +183,3 @@ Ansible Roles
  templates   | templates files
  test        | test playbooks
  vars        | variables dir ( entrypoint main.yml )
-
