@@ -1,0 +1,42 @@
+---
+- name: Get optional channel from repolist 
+  shell: "yum repolist all | grep optional-rpms | awk '{print $1}' | awk -F '/' '{ print $1}'"
+  register: optional_channel
+
+- name: Enable optional channel repository
+  shell: yum-config-manager --enable "{{ optional_channel.stdout }}"
+  register: enabling_opt_repo
+
+- name: Get epel repo from repolist
+  shell: "yum repolist all | grep epel | awk '{print $1}' | awk -F '/' '{ print $1}'"
+  register: epel_repo
+
+- name: Enable epel repository
+  shell: yum-config-manager --enable "{{ epel_repo.stdout }}"
+  register: enabling_epel_repo
+
+- name: Install OpenJDK 11
+  package:
+    name: java-11-openjdk
+    state: present
+
+- name: Find OpenJDK 11 installled path in /usr/lib/jvm/
+  find:
+    paths: /usr/lib/jvm/
+    recurse: no
+    file_type: directory
+    use_regex: yes
+    patterns: 'java-11-openjdk'
+  register: java_home
+
+- debug:
+    msg: "{{ java_home.files[0].path }}"
+
+- name: create file to set JAVA_HOME environment variable
+  lineinfile:
+    path: /etc/profile.d/java-home.sh
+    create: yes
+    line: "{{ item }}"
+  with_items:
+    - 'export JAVA_HOME={{ java_home.files[0].path }}'
+    - 'export PATH=$PATH:$JAVA_HOME/bin'

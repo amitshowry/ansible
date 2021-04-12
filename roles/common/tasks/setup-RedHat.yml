@@ -1,0 +1,32 @@
+---
+- name: Yum clean
+  shell: "yum clean {{ item }}"
+  with_items:
+    - packages
+    - metadata
+    - headers
+    - all
+
+- name: Get optional channel from repolist 
+  shell: "yum repolist all | grep optional-rpms | awk '{print $1}' | awk -F '/' '{ print $1}' | awk -F '!' '{ print $2}'"
+  register: optional_channel
+
+- name: Enable optional channel repository
+  shell: yum-config-manager --enable "{{ optional_channel.stdout }}"
+  register: enabling_opt_repo
+
+- name: Get epel repo from repolist
+  shell: "yum repolist all | grep epel | awk '{print $1}' | awk -F '/' '{ print $1}' | awk -F '!' '{ print $2}'"
+  register: epel_repo
+
+- name: Enable epel repository
+  shell: yum-config-manager --enable "{{ epel_repo.stdout }}"
+  register: enabling_epel_repo
+
+- name: Install Common packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - vim
+    - unzip

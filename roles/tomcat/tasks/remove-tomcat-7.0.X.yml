@@ -1,0 +1,30 @@
+---
+- name: Stop and disable tomcat
+  service:
+    daemon_reload: yes
+    name: tomcat
+    state: stopped
+    enabled: no
+  when: ansible_service_mgr == "systemd"
+  register: tomcat_service
+  failed_when: "tomcat_service is failed and ('find' not in tomcat_service.msg and 'found' not in tomcat_service.msg)"
+
+- name: remove user "tomcat"
+  user:
+    name: tomcat
+    state: absent
+
+- name: remove group "tomcat"
+  group:
+    name: tomcat
+    state: absent
+
+- name: remove apache-tomcat related files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /tmp/apache-tomcat-7.0.108.zip
+    - /opt/apache-tomcat-7.0.108
+    - /usr/share/tomcat
+    - /etc/systemd/system/tomcat.service

@@ -1,0 +1,71 @@
+---
+- name: add group "tomcat"
+  group:
+    name: tomcat
+
+- name: add user "tomcat"
+  user:
+    name: tomcat
+    group: tomcat
+    home: /usr/share/tomcat
+    createhome: no
+    shell: /bin/false
+    system: yes
+
+- name: Download tomcat 9.0.x
+  get_url:
+    url: https://ftp.heanet.ie/mirrors/www.apache.org/dist/tomcat/tomcat-8/v8.5.65/bin/apache-tomcat-8.5.65.zip 
+    dest: /tmp/apache-tomcat-8.5.65.zip
+
+- name: Unpack downloaded archive
+  unarchive:
+    src: /tmp/apache-tomcat-8.5.65.zip
+    dest: /opt/
+    owner: tomcat
+    group: tomcat
+    remote_src: yes
+
+- name: Symlink install directory
+  file: 
+    src: /opt/apache-tomcat-8.5.65
+    path: /usr/share/tomcat 
+    owner: tomcat
+    group: tomcat
+    state: link
+
+- name: Change permissions on tomcat binaries
+  file: 
+    dest: /usr/share/tomcat/bin
+    owner: tomcat 
+    group: tomcat 
+    mode: 0755
+    recurse: yes
+
+- name: Copy tomcat service file
+  template:
+    src: templates/tomcat.service.j2
+    dest: /etc/systemd/system/tomcat.service
+  when: ansible_service_mgr == "systemd"
+
+- name: Start and enable tomcat
+  service:
+    daemon_reload: yes
+    name: tomcat
+    state: started
+    enabled: yes
+  when: ansible_service_mgr == "systemd"
+
+- name: Set UI access credentials
+  template:
+    src: tomcat-users.xml.j2
+    dest: /usr/share/tomcat/conf/tomcat-users.xml
+  notify: restart tomcat
+
+- name: Allow access to Manager and Host Manager apps from any IP
+  template:
+    src: context.xml.j2 
+    dest: "{{ item }}"
+  with_items:
+    - /usr/share/tomcat/webapps/host-manager/META-INF/context.xml
+    - /usr/share/tomcat/webapps/manager/META-INF/context.xml
+  notify: restart tomcat

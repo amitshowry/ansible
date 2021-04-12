@@ -1,13 +1,12 @@
 ---
-# Setup/install tasks.
+# tasks file for tomcat
 - name: Set up on RedHat.
-  include_tasks: setup-RedHat.yml
+  include_tasks: setup-tomcat-10.0.X.yml
   when:
     - ansible_os_family == 'RedHat'
     - ansible_distribution != 'Fedora'
 
 - name: Set up on Ubuntu.
-  include_tasks: setup-Ubuntu.yml
+  include_tasks: setup-tomcat-10.0.X.yml
   when:
     - ansible_distribution == 'Ubuntu'
-
